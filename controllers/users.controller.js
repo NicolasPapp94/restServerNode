@@ -1,34 +1,67 @@
-const { response, request } = require('express')
+const { response, request } = require('express');
+const User = require('../models/user');
+const crypto = require('bcryptjs');
 
-const userGet = (req = request, res = response) => {
-  const qParams = req.query;
-  // const {nombre = 'No name', apellido='No apellido'} = req.query
+const userGet = async (req = request, res = response) => {
+  const { limit = 5, from = 0 } = req.query;
+  const condition = { state: true };
+
+
+  const [total, users] = await Promise.all([
+    User.countDocuments(condition),
+    User.find(condition)
+    .skip(Number(from))
+    .limit(Number(limit))
+  ]);
+
 
   res.json({
     msg: "Get from API - Controller",
-    qParams
+    total,
+    users
   })
 }
 
-const userPost = (req = request, res = response) => {
-  const body = req.body;
+const userPost = async (req = request, res = response) => {
+  const { name, email, password, role } = req.body;
+  const user = new User({ name, email, password, role });
+  
+  // Encriptar la pass
+  const salt = crypto.genSaltSync();
+  user.password = crypto.hashSync(password, salt);
+  // Guardar DB
+  await user.save();
   res.json({
     msg: "Post from API - Controller",
-    body
+    user
   })
 }
 
-const userPut = (req = request, res) => {
-  const userID = req.params.userID;
+const userPut = async (req = request, res) => {
+  const { userID } = req.params;
+  const { password, google, _id, ...dataUpdate } = req.body;
+
+  if ( password ) {
+    const salt = crypto.genSaltSync();
+    dataUpdate.password = crypto.hashSync(password, salt);
+  }
+
+  const userDB = await User.findByIdAndUpdate(userID, dataUpdate);
+
   res.json({
     msg: "Put from API - Controller",
-    userID
+    userDB
   })
 }
 
-const userDelete = (req, res) => {
+const userDelete = async(req, res) => {
+  const { userID } = req.params;
+  
+  const deletedUser = await User.findByIdAndUpdate(userID, { state: false });
+
   res.json({
-    msg: "Delete from API - Controller"
+    msg: "Delete from API - Controller",
+    deletedUser
   })
 }
 

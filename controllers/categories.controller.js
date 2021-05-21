@@ -8,7 +8,7 @@ const categoriesGet = async (req = request, res = response) => {
   const [total, categories] = await Promise.all([
     Category.countDocuments(condition),
     Category.find(condition)
-    .populate('userID')
+    .populate('userID', 'name')
     .skip(Number(from))
     .limit(Number(limit))
   ]);
@@ -22,7 +22,7 @@ const categoriesGet = async (req = request, res = response) => {
 
 const categoriesGetByID = async (req = request, res = response) => {
   const { CategoryID } = req.params;
-  const category = await Category.findById(CategoryID).populate('userID');
+  const category = await Category.findById(CategoryID).populate('userID', 'name');
 
   res.json({
     msg: "Get Categories by ID from API - Controller",

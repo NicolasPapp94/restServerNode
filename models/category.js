@@ -9,7 +9,7 @@ const CategorySchema = Schema({
   state: {
     type: Boolean,
     default: true,
-    required: [true, "El tipo es obligatorio"]
+    required: [true, "El estado es obligatorio"]
   },
   userID: {
     type: Schema.Types.ObjectId,

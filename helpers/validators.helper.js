@@ -1,4 +1,4 @@
-const { Category } = require('../models/index.models');
+const { Category, Product } = require('../models/index.models');
 const Role = require('../models/role');
 const User = require('../models/user');
 
@@ -30,6 +30,13 @@ const idCategoryExist = async (id) => {
   }
 }
 
+const idProductExist = async (id) => {
+  const existeID = await Product.findById(id);
+  if (!existeID) {
+    throw new Error(`El id: ${ id } no se encuentra en la BD`)
+  }
+}
+
 
 
 
@@ -37,5 +44,6 @@ module.exports = {
   roleValidate,
   emailExist,
   idExist,
-  idCategoryExist
+  idCategoryExist,
+  idProductExist
 }

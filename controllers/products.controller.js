@@ -40,7 +40,7 @@ const productsPost = async (req = request, res = response) => {
   const { state, userID, name, ...body } = req.body;
   
 
-  const productsDB = await Product.findOne({ name });
+  const productsDB = await Product.findOne({ name: name.toUpperCase() });
   
   if (productsDB) {
     return res.status(400).json({

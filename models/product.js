@@ -23,6 +23,9 @@ const ProductSchema = Schema({
     type: Boolean,
     default: true
   },
+  image: {
+    type: String
+  },
   categoryID: {
     type: Schema.Types.ObjectId,
     ref: "Category",

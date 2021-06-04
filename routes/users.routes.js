@@ -11,6 +11,7 @@ const router = Router();
 
 router.get('/', userGet);
 
+
 router.post('/', [
   check('name', 'El nombre es obligatorio').not().isEmpty(),
   check('password', 'La password es obligatoria y de mas de 6 letras').isLength({ min: 6 }),
